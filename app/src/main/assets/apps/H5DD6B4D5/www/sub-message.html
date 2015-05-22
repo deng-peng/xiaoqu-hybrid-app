@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<title>小区助手</title>
+		<script src="js/mui.min.js"></script>
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<link href="css/app.css" rel="stylesheet" />
+	</head>
+
+	<body>
+		<div class="mui-content">
+			<div class="title">最新留言</div>
+			<ul class="mui-table-view" id="post_list">
+			</ul>
+			<div class="mui-content-padded">
+				<button id="btn_next_page" class="mui-btn mui-btn-positive mui-btn-block">下一页</button>
+			</div>
+			<div class="mui-input-row" style="margin: 5px;">
+				<textarea id="post_content" rows="3" placeholder="需要帮助？留个言吧。" style="margin-bottom: 0;"></textarea>
+			</div>
+			<div class="mui-button-row" style="margin-bottom: 25px;">
+				<button id="btn_save" class="mui-btn mui-btn-primary" onclick="return false;">提交</button>
+			</div>
+		</div>
+		<script type="text/javascript">
+			var page = 1;
+			var url = 'http://xiaoqu.xiaotaban.com/api/post/1?page=';
+			var list = '';
+			var nextBtn = document.getElementById("btn_next_page");
+			mui.plusReady(function() {
+				mui.init();
+				mui.getJSON(url + page, '', function(res) {
+					showPost(res);
+				});
+			});
+			nextBtn.addEventListener('tap', function() {
+				page++;
+				mui.getJSON(url + page, '', function(res) {
+					showPost(res);
+				});
+			});
+
+			function showPost(res) {
+				for (var p in res.data) {
+					var dt = new Date(res.data[p].created_at);
+					list = list + '<li class="mui-table-view-cell">' + res.data[p].content +
+						'(' + (dt.getMonth() + 1) + '月' + dt.getDate() + '日)</li>';
+				}
+				document.getElementById("post_list").innerHTML = list;
+				if (res.per_page * res.current_page >= res.total) {
+					nextBtn.parentNode.removeChild(nextBtn);
+				}
+			}
+			var saveurl = 'http://xiaoqu.xiaotaban.com/api/post/1/save';
+			document.getElementById("btn_save").addEventListener('tap', function() {
+				var content = document.getElementById("post_content").value;
+				if (content.length < 1)
+					return;
+				var data = {
+					content: content
+				};
+				mui.post(saveurl, data, function(res) {
+					plus.nativeUI.toast("提交成功");
+					list = '<li class="mui-table-view-cell">' + content + '(刚刚)</li>' + list;
+					document.getElementById("post_list").innerHTML = list;
+					document.getElementById("post_content").value = '';
+				})
+			});
+		</script>
+	</body>
+
+</html>

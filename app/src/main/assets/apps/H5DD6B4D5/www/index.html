@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<title>寰宇小助手</title>
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<link href="css/app.css" rel="stylesheet" />
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-icon mui-pull-left"></a>
+			<a id="info" class="mui-icon mui-icon-info-filled mui-pull-right" style="color: #999;"></a>
+			<h1 id="title" class="mui-title">首页</h1>
+		</header>
+		<nav class="mui-bar mui-bar-tab">
+			<a id="defaultTab" class="mui-tab-item mui-active" href="sub-index.html">
+				<span class="mui-icon mui-icon-home"></span>
+				<span class="mui-tab-label">首页</span>
+			</a>
+			<a class="mui-tab-item" href="sub-contact.html">
+				<span class="mui-icon mui-icon-phone"></span>
+				<span class="mui-tab-label">生活服务</span>
+			</a>
+			<a class="mui-tab-item" href="sub-message.html">
+				<span class="mui-icon mui-icon-compose"></span>
+				<span class="mui-tab-label">留言互助</span>
+			</a>
+		</nav>
+		<script src="js/mui.min.js"></script>
+		<script type="text/javascript">
+			mui.init({
+				swipeBack: false,
+				statusBarBackground: '#f7f7f7',
+				gestureConfig: {
+					doubletap: true
+				}
+			});
+			 //处理右上角关于图标的点击事件；
+			document.getElementById('info').addEventListener('tap', function() {
+				mui.openWindow({
+					url: 'about.html',
+					id: 'about'
+				});
+			});
+			 //首页返回键处理
+			 //处理逻辑：1秒内，连续两次按返回键，则退出应用；
+			var first = null;
+			mui.back = function() {
+                //首次按键，提示‘再按一次退出应用’
+                if (!first) {
+                    first = new Date().getTime();
+                    mui.toast('再按一次退出应用');
+                    setTimeout(function() {
+                        first = null;
+                    }, 1000);
+                } else {
+                    if (new Date().getTime() - first < 1000) {
+                        plus.runtime.quit();
+                    }
+                }
+			};
+			
+			var subpages = ['sub-index.html','sub-contact.html','sub-message.html'];
+			var subpage_style = {
+				top: '46px',
+				bottom: '50px'
+			};
+			
+			//创建子页面，首个选项卡页面显示，其它均隐藏；
+			mui.plusReady(function(){
+				var self = plus.webview.currentWebview();
+				for(var i=0;i<3;i++){
+					var sub = plus.webview.create(subpages[i],subpages[i],subpage_style);
+					if(i>0){
+						sub.hide();
+					}
+					self.append(sub);
+				}
+			});
+			
+			//当前激活选项
+			var activeTab = subpages[0];
+			var title = document.getElementById("title");
+			//选项卡点击事件
+			mui('.mui-bar-tab').on('tap', 'a', function(e) {
+				var targetTab = this.getAttribute('href');
+				if (targetTab == activeTab) {
+					return;
+				}
+				//更换标题
+				title.innerHTML = this.querySelector('.mui-tab-label').innerHTML;
+				//显示目标选项卡
+				plus.webview.show(targetTab);
+				//隐藏当前;
+				plus.webview.hide(activeTab);
+				//更改当前活跃的选项卡
+				activeTab = targetTab;
+			});
+			
+			//自定义事件，模拟点击“首页选项卡”
+			document.addEventListener('gohome',function () {
+				var defaultTab = document.getElementById("defaultTab");
+				//模拟首页点击
+				mui.trigger(defaultTab,'tap');
+				//切换选项卡高亮
+				var current = document.querySelector(".mui-bar-tab>.mui-tab-item.mui-active");
+				if(defaultTab!==current){
+					current.classList.remove('mui-active');
+					defaultTab.classList.add('mui-active');
+				}
+			});
+		</script>
+	</body>
+
+</html>

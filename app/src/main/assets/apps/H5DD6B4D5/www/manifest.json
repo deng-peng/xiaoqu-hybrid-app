@@ -1,0 +1,63 @@
+{
+	"id": "H5DD6B4D5",
+	"name": "寰宇小助手",
+	"version": {
+		"name": "0.9.2",
+		"code": "92"
+	},
+	"description": "",
+	"icons": {
+		"72": "icon.png"
+	},
+	"launch_path": "index.html",
+	"developer": {
+		"name": "xiaotaban",
+		"email": "xiaotaban@qq.com",
+		"url": "http://xiaotaban.com"
+	},
+	"permissions": {
+		"Device": {
+			"description": "访问设备信息"
+		},
+		"File": {
+			"description": "访问本地文件系统"
+		},
+		"Invocation": {
+			"description": "调用Native JS桥功能"
+		},
+		"Storage": {
+			"description": "管理应用本地数据"
+		},
+		"UI": {
+			"description": "管理系统原生控件"
+		},
+		"Runtime": {
+			"description": "访问运行期环境"
+		},
+		"XMLHttpRequest": {
+			"description": "跨域网络访问"
+		},
+		"Statistic": {
+			"description": "管理统计插件"
+		}
+	},
+	"plus": {
+		"splashscreen": {
+			"autoclose": true,
+			"waiting": true
+		},
+		"runmode": "liberate",
+		"distribute": {
+            "plugins": {
+                "statics": {
+                    "umeng": {
+                        "appkey_ios": "55266324fd98c5fd7d0015a5",
+                        "channelid_ios": "none",
+                        "appkey_android": "55266324fd98c5fd7d0015a5",
+                        "channelid_android": "qqqun"
+                    }
+                }
+            }
+        }
+	}
+}

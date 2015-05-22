@@ -1,0 +1,13 @@
+html,
+body {
+	background-color: #efeff4;
+}
+.title {
+	margin: 20px 15px 7px;
+	color: #6d6d72;
+	font-size: 15px;
+}
+.mui-table-view-divider {
+	background-color: #000;
+	color: #AEAEB7;
+}

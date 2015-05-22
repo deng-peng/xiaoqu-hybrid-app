@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<title></title>
+		<script src="js/mui.min.js"></script>
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<link href="css/app.css" rel="stylesheet" />
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">关于</h1>
+		</header>
+		<div class="mui-content">
+			<div class="title">
+				<p>为中海寰宇小区量身定制，方便你的生活。</p>
+				<p>业务合作请联系QQ 1446159429</p>
+			</div>
+
+			<ul class="mui-table-view" style="margin-top: 25px;">
+				<li class="mui-table-view-cell">
+					<a id="check_version" style="text-align: center;" href="javascript:;">
+						检查更新
+					</a>
+				</li>
+			</ul>
+		</div>
+		<script type="text/javascript">
+			mui.plusReady(function(){
+	             			mui.init();
+					document.getElementById("check_version").addEventListener('tap', function() {
+						var url = 'http://xiaoqu.xiaotaban.com/api/update/';
+						mui.getJSON(url, '', function(response) {
+							//response = JSON.parse(response);
+							checkUpdateData(response);
+						});
+					});
+	
+					function checkUpdateData(j) {
+						var curVer = plus.runtime.version;
+						var inf = j[plus.os.name];
+						if (inf) {
+							var srvVer = inf.version;
+							// 判断是否需要升级
+							if (compareVersion(curVer, srvVer)) {
+								// 提示用户是否升级
+								plus.nativeUI.confirm(inf.note, function(i) {
+									if (1 == i.index) {
+										plus.runtime.openURL(inf.url);
+									}
+								}, inf.title, ["取　消", "立即更新"]);
+							} else {
+								plus.nativeUI.toast("你已经是最新的版本");
+							}
+						} else {
+							plus.nativeUI.toast("你已经是最新的版本");
+						}
+					}
+	
+					function compareVersion(ov, nv) {
+						if (!ov || !nv || ov == "" || nv == "") {
+							return false;
+						}
+						var b = false,
+							ova = ov.split(".", 4),
+							nva = nv.split(".", 4);
+						for (var i = 0; i < ova.length && i < nva.length; i++) {
+							var so = ova[i],
+								no = parseInt(so),
+								sn = nva[i],
+								nn = parseInt(sn);
+							if (nn > no || sn.length > so.length) {
+								return true;
+							} else if (nn < no) {
+								return false;
+							}
+						}
+						if (nva.length > ova.length && 0 == nv.indexOf(ov)) {
+							return true;
+						}
+					}
+	        });
+		</script>
+	</body>
+
+</html>
